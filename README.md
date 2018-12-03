@@ -1,5 +1,4 @@
-# wjw_flutter_blog
-
+# wjw_flutter_app
 A new Flutter application.
 
 ## Getting Started
