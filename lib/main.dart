@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 
+import 'entity/Member.dart';
+
 void main() => runApp(new FlutterApp());
 
 
@@ -11,6 +13,8 @@ class FlutterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'FlutterAPP',
+      //主题添加
+      theme: new ThemeData(primaryColor: Colors.green.shade800),
       home: new DemoFlutter(),
 //      home: new Scaffold(
 //        appBar: new AppBar(
@@ -37,7 +41,9 @@ class DemoFlutter extends StatefulWidget{
 }
 
 class DemoFlutterState extends State<DemoFlutter> {
-  var _list = [];
+//  var _list = [];
+//  var _list1 = <Member>[];
+  List<Member> _list2 = [];
   //添加一个属性来保存文本的样式
   final _biggerFont = const TextStyle(fontSize: 18.0);
   _loadData() async {
@@ -46,7 +52,12 @@ class DemoFlutterState extends State<DemoFlutter> {
     Dio dio = new Dio();
     Response response = await dio.get(dataURL);
     setState(() {
-      _list = response.data;
+//      _list = response.data;
+      for(var data in response.data){
+//          Member member = new Member.login(data["login"]);
+            Member member = new Member(data["login"], data["avatar_url"]);
+          _list2.add(member);
+      }
     });
   }
 
@@ -70,7 +81,7 @@ class DemoFlutterState extends State<DemoFlutter> {
 //      body: new Text("新的组件"),
         body: new ListView.builder(
 //            padding: const EdgeInsets.all(16.0),
-            itemCount: _list.length * 2,
+            itemCount: _list2.length * 2,
             itemBuilder: (BuildContext context, int position) {
               if(position.isOdd)
                 return new Divider();
@@ -89,7 +100,13 @@ class DemoFlutterState extends State<DemoFlutter> {
       return new Padding(
         padding: const EdgeInsets.all(16.0),
         child:  new ListTile(
-            title : new Text("${_list[i]["login"]}", style: _biggerFont)
+//            title : new Text("${_list[i]["login"]}", style: _biggerFont)
+            title : new Text("${_list2[i].login}", style: _biggerFont),
+            leading: new CircleAvatar(
+                backgroundColor: Colors.blue,
+                //avatarUrl不能为空
+                backgroundImage: new NetworkImage(_list2[i].avatarUrl)
+            ),
         )
       );
 
